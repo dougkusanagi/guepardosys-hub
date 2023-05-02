@@ -88,7 +88,7 @@ class ProductController extends Controller
         ProductModelService::update($request, $product);
         ProductImageService::create($request, $product);
 
-        return to_route('product.index')
+        return back()
             ->with('success', 'Produto atualizado com sucesso');
     }
 
