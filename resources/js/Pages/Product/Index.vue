@@ -1,0 +1,339 @@
+<template>
+    <Head title="Produtos" />
+
+    <DashboardLayout>
+        <div class="pt-12 px-6">
+            <LayoutHeader :breadcrumbs-links="breadcrumbsLinks">
+                <template #header-title> Lista de Produtos </template>
+
+                <template #append>
+                    <div class="flex justify-between md:flex-1 md:justify-end">
+                        <LayoutButton
+                            class="mr-2"
+                            :href="route('product.create')"
+                        >
+                            <template #before>
+                                <PlusIcon />
+                            </template>
+
+                            Cadastrar Produto
+                        </LayoutButton>
+                    </div>
+                </template>
+            </LayoutHeader>
+
+            <div class="flex mb-6 border-b border-slate-300">
+                <TabsFilterByStatusLink
+                    :isActive="!route().params.status"
+                    :count="props.product_count.total"
+                    label="Todos"
+                    @click="filterByStatus(null)"
+                />
+
+                <TabsFilterByStatusLink
+                    :isActive="
+                        route().params.status === product_status_all.Active
+                    "
+                    :count="props.product_count.totalActive"
+                    label="Ativos"
+                    @click="filterByStatus(product_status_all.Active)"
+                />
+
+                <TabsFilterByStatusLink
+                    :isActive="
+                        route().params.status === product_status_all.Inactive
+                    "
+                    :count="props.product_count.totalInactive"
+                    label="Inativos"
+                    @click="filterByStatus(product_status_all.Inactive)"
+                />
+
+                <TabsFilterByStatusLink
+                    :isActive="
+                        route().params.status === product_status_all.Waiting
+                    "
+                    :count="props.product_count.totalWaiting"
+                    label="Aguardando"
+                    @click="filterByStatus(product_status_all.Waiting)"
+                />
+            </div>
+
+            <div class="flex gap-4 justify-between mb-6">
+                <PaginationPerPage :queryParams="queryParams">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </PaginationPerPage>
+
+                <div>
+                    <PaginationPages :pages="props.product_pages" />
+                </div>
+            </div>
+
+            <LayoutSection class="bg-white rounded-lg divide-y">
+                <div class="md:flex md:space-x-4 mb-4">
+                    <div class="w-1/3 relative flex-1">
+                        <FormInputText
+                            placeholder="Digite o nome do produto..."
+                            type="search"
+                            v-model="queryParams.search"
+                        />
+                    </div>
+
+                    <div class="w-1/3">
+                        <FormSelect v-model="queryParams.category">
+                            <option
+                                v-for="option in categories_all_complete"
+                                :value="option.id"
+                                :key="option.id"
+                            >
+                                {{ option.name }}
+                            </option>
+                        </FormSelect>
+                    </div>
+
+                    <span
+                        class="flex items-center justify-center flex-1 ml text-[#969bba] text-center"
+                    >
+                        {{ props.product_pages.total }} encontrados
+                    </span>
+                </div>
+
+                <div
+                    class="flex items-center bg-slate-50 text-slate-600 border-y p-3 dark:bg-[#11183C] dark:brightness-75 dark:border-none dark:text-slate-200 px-6"
+                >
+                    <!-- <input class="border-slate-300" type="checkbox" name="[]" /> -->
+
+                    <div class="w-16 h-0 opacity-0 mx-2" alt="Produto"></div>
+
+                    <span
+                        class="flex font-bold cursor-pointer"
+                        @click="sortBy('name')"
+                    >
+                        <span
+                            class="mr-1"
+                            :class="
+                                route().params.order_by !== 'name'
+                                    ? 'hidden'
+                                    : ''
+                            "
+                        >
+                            <ArrowUp
+                                :class="
+                                    route().params.direction === 'desc'
+                                        ? 'rotate-180'
+                                        : ''
+                                "
+                            />
+                        </span>
+                        Nome
+                    </span>
+
+                    <span
+                        class="flex font-bold cursor-pointer ml-auto mr-4"
+                        @click="sortBy('status')"
+                    >
+                        <span
+                            class="mr-1"
+                            :class="
+                                route().params.order_by !== 'status'
+                                    ? 'hidden'
+                                    : ''
+                            "
+                        >
+                            <ArrowUp
+                                :class="
+                                    route().params.direction === 'desc'
+                                        ? 'rotate-180'
+                                        : ''
+                                "
+                            />
+                        </span>
+                        Status
+                    </span>
+
+                    <div class="ml-4">
+                        <button class="btn btn-square btn-xs opacity-0">
+                            <Close />
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white border-slate-200 overflow-hidden shadow-sm dark:bg-[#11183C] dark:border-slate-700"
+                    v-for="product in props.product_pages.data"
+                    :key="product.id"
+                >
+                    <div class="flex items-center space-x-4 py-4 px-6">
+                        <!-- <input class="border-slate-300" type="checkbox" name="[]" /> -->
+                        <!-- <pre>{{ product.images }}</pre> -->
+
+                        <a href="#">
+                            <!-- <img
+							class="w-16 h-16 object-fill rounded-full"
+							:src="`https://picsum.photos/seed/${product.name
+								.split(' ')
+								.join('-')}/200/300`"
+							alt="Produto"
+						/> -->
+                            <img
+                                class="w-16 h-16 object-fill rounded-full"
+                                :src="product.images[0]"
+                                alt="Produto"
+                            />
+                        </a>
+
+                        <div class="flex flex-col flex-1 justify-center">
+                            <h3 class="text-xs text-slate-400">
+                                {{ product.category.name }}
+                            </h3>
+
+                            <h2 class="text-lg font-bold">
+                                <Link
+                                    :href="route('product.edit', product.id)"
+                                    class="underline"
+                                    >{{ product.name }}</Link
+                                >
+                            </h2>
+                        </div>
+
+                        <div class="flex">
+                            <div
+                                class="flex items-center mr-4"
+                                :class="{
+                                    'text-emerald-400':
+                                        product.status ==
+                                        product_status_all.Active,
+                                    'text-red-400':
+                                        product.status ==
+                                        product_status_all.Inactive,
+                                    'text-yellow-500':
+                                        product.status ==
+                                        product_status_all.Waiting,
+                                }"
+                            >
+                                <div
+                                    class="w-2 h-2 rounded-full mr-2"
+                                    :class="{
+                                        'bg-emerald-400':
+                                            product.status ==
+                                            product_status_all.Active,
+                                        'bg-red-400':
+                                            product.status ==
+                                            product_status_all.Inactive,
+                                        'bg-yellow-500':
+                                            product.status ==
+                                            product_status_all.Waiting,
+                                    }"
+                                ></div>
+                                {{ product_status_array[product.status] }}
+                            </div>
+
+                            <div class="flex items-center ml-4">
+                                <Link
+                                    :href="route('product.destroy', product.id)"
+                                    class="btn btn-error btn-sm btn-outline btn-square"
+                                    method="delete"
+                                    as="button"
+                                >
+                                    <Close />
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </LayoutSection>
+
+            <div class="flex gap-4 justify-between mb-6">
+                <PaginationPerPage :queryParams="queryParams" class>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </PaginationPerPage>
+
+                <div>
+                    <PaginationPages :pages="props.product_pages" />
+                </div>
+            </div>
+        </div>
+    </DashboardLayout>
+</template>
+
+<script setup>
+import FormInputText from "@/Components/Form/FormInputText.vue";
+import FormSelect from "@/Components/Form/FormSelect.vue";
+import LayoutButton from "@/Components/LayoutButton.vue";
+import LayoutHeader from "@/Components/LayoutHeader.vue";
+import LayoutSection from "@/Components/LayoutSection.vue";
+import PaginationPages from "@/Components/PaginationPages.vue";
+import PaginationPerPage from "@/Components/PaginationPerPage.vue";
+import TabsFilterByStatusLink from "@/Components/TabsFilterByStatusLink.vue";
+import ArrowUp from "@/Icons/ArrowUp.vue";
+import PlusIcon from "@/Icons/Plus.vue";
+import DashboardLayout from "@/Layout/DashboardLayout.vue";
+import { Head, Link, router } from "@inertiajs/vue3";
+import { computed, reactive, watch } from "vue";
+import Close from "../../Icons/Close.vue";
+
+const props = defineProps({
+    product_pages: Object,
+    product_count: Object,
+    categories_all: Array,
+    product_status_array: Array,
+    product_status_all: Object,
+    per_page: String,
+});
+
+const breadcrumbsLinks = [
+    {
+        label: "Início",
+        link: route("dashboard"),
+        isHome: true,
+    },
+    {
+        label: "Produtos",
+    },
+    {
+        label: "Listar",
+    },
+];
+
+const queryParams = reactive({
+    search: "",
+    order_by: "name",
+    direction: "asc",
+    status: "",
+    category: "",
+    per_page: props.per_page,
+});
+
+watch(
+    queryParams,
+    () => {
+        router.get(route("product.index"), queryParams, {
+            replace: true,
+            preserveState: true,
+        });
+    },
+    { deep: true }
+);
+
+const sortBy = (field) => {
+    if (queryParams.order_by === field) {
+        queryParams.direction =
+            queryParams.direction === "asc" ? "desc" : "asc";
+    } else {
+        queryParams.direction = "asc";
+    }
+
+    queryParams.order_by = field;
+};
+
+const filterByStatus = (status) => (queryParams.status = status);
+
+const categories_all_complete = computed(() => {
+    return [{ name: "Todas as categorias", id: "" }, ...props.categories_all];
+});
+</script>
