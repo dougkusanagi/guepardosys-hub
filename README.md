@@ -1,5 +1,5 @@
-<h1>GuepardoSys - Gerenciador de Produtos e Pedidos</h1>
-<br />
-<p>App para gerenciamento de produtos, categorias e pedidos de marketplaces e afins.</p>
+# GuepardoSys - Gerenciador de Produtos e Pedidos
 
-<img src="https://github.com/dougkusanagi/guepardosys-hub/blob/master/docs/screenshot-themes.png?raw=true" />
+App para gerenciamento de produtos, categorias e pedidos de marketplaces e afins.
+
+![alt text](https://github.com/dougkusanagi/guepardosys-hub/blob/main/docs/screenshot-themes.png?raw=true)
