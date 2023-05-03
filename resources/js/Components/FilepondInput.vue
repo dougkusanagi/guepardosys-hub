@@ -29,7 +29,7 @@ defineExpose({ filepond_ref });
 
 const handleFilePondInit = function () {
     setOptions({
-        credits: true,
+        credits: false,
         server: {
             url: "/filepond",
             headers: { "X-CSRF-TOKEN": usePage().props.csrf_token },

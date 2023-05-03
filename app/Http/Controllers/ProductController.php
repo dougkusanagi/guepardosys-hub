@@ -12,7 +12,9 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\User;
 use App\Services\ProductModelService;
 use App\Services\ProductService;
+use RahulHaque\Filepond\Facades\Filepond;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -68,6 +70,7 @@ class ProductController extends Controller
                 ->map(fn ($status, $index) => ['id' => $index, 'name' => $status]),
             'categories_all' => Category::all(),
             'images' => getProductImagesPublicPaths($product),
+            'mediaItems' => $product->getMedia(),
         ]);
     }
 
@@ -81,12 +84,24 @@ class ProductController extends Controller
             ->with('success', 'Produto cadastrado com sucesso');
     }
 
+    public function registerMedia(UpdateProductRequest $request, Product $product)
+    {
+        foreach ($request->filepond_files as $file) {
+            $filepondField = Filepond::field($file)->getFile();
+            $product
+                ->addMedia($filepondField->getPathname())
+                ->toMediaCollection();
+        }
+    }
+
     public function update(UpdateProductRequest $request, Product $product)
     {
         $this->authorize('update', $product);
         $product->update($request->validated());
         ProductModelService::update($request, $product);
-        ProductImageService::create($request, $product);
+        // ProductImageService::create($request, $product);
+        $this->registerMedia($request, $product);
+        // order_column: 3
 
         return back()
             ->with('success', 'Produto atualizado com sucesso');
