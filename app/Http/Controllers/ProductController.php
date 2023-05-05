@@ -84,9 +84,9 @@ class ProductController extends Controller
             ->with('success', 'Produto cadastrado com sucesso');
     }
 
-    public function registerMedia(UpdateProductRequest $request, Product $product)
+    public function registerMedia(array $images, Product $product)
     {
-        foreach ($request->filepond_files as $file) {
+        foreach ($images as $file) {
             $filepondField = Filepond::field($file)->getFile();
             $product
                 ->addMedia($filepondField->getPathname())
@@ -99,8 +99,7 @@ class ProductController extends Controller
         $this->authorize('update', $product);
         $product->update($request->validated());
         ProductModelService::update($request, $product);
-        // ProductImageService::create($request, $product);
-        $this->registerMedia($request, $product);
+        $this->registerMedia($request->images, $product);
         // order_column: 3
 
         return back()
