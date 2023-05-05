@@ -6,7 +6,9 @@
             <Link
                 class="flex items-center justify-center w-full text-center bg-rose-700/70 rounded-t-lg"
                 :href="
-                    route('image.delete', { image: image, product: product.id })
+                    route('image.delete', {
+                        media_item: image,
+                    })
                 "
                 method="delete"
                 as="button"
@@ -22,7 +24,10 @@
             </a>
         </div>
 
-        <img class="w-20 h-20 object-cover rounded-lg" :src="image" />
+        <img
+            class="w-20 h-20 object-cover rounded-lg"
+            :src="image.original_url"
+        />
     </div>
 </template>
 
@@ -31,7 +36,7 @@ import CloseCircle from "@/Icons/CloseCircle.vue";
 import Eye from "@/Icons/Eye.vue";
 
 defineProps({
-    image: String,
+    image: Object,
     product: Object,
 });
 
