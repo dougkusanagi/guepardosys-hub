@@ -543,9 +543,9 @@ watch(form, (new_data) => (form.slug = slugfy(new_data.name)));
 function submit() {
     form.put(route("product.update", props.product.id), {
         onSuccess: () => {
-            if (filepond_input_ref.value) {
-                filepond_input_ref.value.filepond_ref.removeFiles();
-            }
+            console.log(filepond_input_ref.filepond_ref);
+            filepond_input_ref.value.filepond_ref.removeFiles();
+            form.filepond_files = [];
         },
     });
 }
