@@ -53,12 +53,8 @@
                         </div>
 
                         <div class="flex gap-3">
-                            <!-- <pre>{{ props.mediaItems }}</pre> -->
-                        </div>
-
-                        <div class="flex gap-3">
                             <ProductEditImageThumb
-                                v-for="image in props.mediaItems"
+                                v-for="image in props.images"
                                 :image="image"
                                 :product="product"
                             />
@@ -507,7 +503,6 @@ const props = defineProps({
     errors: Object,
     csrf_token: String,
     images: Array,
-    mediaItems: Array,
 });
 
 const form = useForm({

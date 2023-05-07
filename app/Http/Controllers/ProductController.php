@@ -22,10 +22,10 @@ class ProductController extends Controller
     public function index()
     {
         return inertia('Product/Index', [
-            'product_pages' =>
+            'products' =>
             Product::query()
                 ->whereBelongsTo(auth()->user()->company)
-                ->with('category')
+                ->with(['category'])
                 ->filter()
                 ->paginate(request('per_page'))
                 ->withQueryString(),
@@ -35,16 +35,6 @@ class ProductController extends Controller
             'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
             'per_page' => request('per_page', Product::perPage),
         ]);
-    }
-
-    public function getProductStatusAll()
-    {
-        $product_status_all = [];
-        foreach (ProductStatusEnum::asArray() as $index => $status) {
-            $product_status_all[$index] = (string) $status;
-        }
-
-        return collect($product_status_all);
     }
 
     public function create()
@@ -69,8 +59,7 @@ class ProductController extends Controller
             'product_status_enum' => collect(ProductStatusEnum::asSelectArray())
                 ->map(fn ($status, $index) => ['id' => $index, 'name' => $status]),
             'categories_all' => Category::all(),
-            'images' => getProductImagesPublicPaths($product),
-            'mediaItems' => $product->getMedia(),
+            'images' => $product->getMedia('images'),
         ]);
     }
 
@@ -78,20 +67,10 @@ class ProductController extends Controller
     {
         $product = Product::create($request->validated() + ['company_id' => auth()->user()->company_id]);
         ProductModelService::register($request, $product);
-        ProductImageService::create($request, $product);
+        ProductImageService::registerCollections($request, $product);
 
         return to_route('product.edit', $product)
             ->with('success', 'Produto cadastrado com sucesso');
-    }
-
-    public function registerMedia(array $images, Product $product)
-    {
-        foreach ($images as $file) {
-            $filepondField = Filepond::field($file)->getFile();
-            $product
-                ->addMedia($filepondField->getPathname())
-                ->toMediaCollection();
-        }
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -99,8 +78,7 @@ class ProductController extends Controller
         $this->authorize('update', $product);
         $product->update($request->validated());
         ProductModelService::update($request, $product);
-        $this->registerMedia($request->images, $product);
-        // order_column: 3
+        ProductImageService::registerCollections($request, $product);
 
         return back()
             ->with('success', 'Produto atualizado com sucesso');
@@ -112,5 +90,15 @@ class ProductController extends Controller
 
         return back()
             ->with('success', 'Produto removido com sucesso');
+    }
+
+    public function getProductStatusAll()
+    {
+        $product_status_all = [];
+        foreach (ProductStatusEnum::asArray() as $index => $status) {
+            $product_status_all[$index] = (string) $status;
+        }
+
+        return collect($product_status_all);
     }
 }

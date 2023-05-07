@@ -67,7 +67,7 @@
                 </PaginationPerPage>
 
                 <div>
-                    <PaginationPages :pages="props.product_pages" />
+                    <PaginationPages :pages="props.products" />
                 </div>
             </div>
 
@@ -96,7 +96,7 @@
                     <span
                         class="flex items-center justify-center flex-1 ml text-[#969bba] text-center"
                     >
-                        {{ props.product_pages.total }} encontrados
+                        {{ props.products.total }} encontrados
                     </span>
                 </div>
 
@@ -162,14 +162,14 @@
 
                 <div
                     class="bg-white border-slate-200 overflow-hidden shadow-sm dark:bg-[#11183C] dark:border-slate-700"
-                    v-for="product in props.product_pages.data"
+                    v-for="product in props.products.data"
                     :key="product.id"
                 >
                     <div class="flex items-center space-x-4 py-4 px-6">
                         <!-- <input class="border-slate-300" type="checkbox" name="[]" /> -->
-                        <!-- <pre>{{ product.images }}</pre> -->
 
                         <a href="#">
+                            <!-- <pre>{{ product.images[0].original_url }}</pre> -->
                             <!-- <img
 							class="w-16 h-16 object-fill rounded-full"
 							:src="`https://picsum.photos/seed/${product.name
@@ -179,7 +179,7 @@
 						/> -->
                             <img
                                 class="w-16 h-16 object-fill rounded-full"
-                                :src="product.images[0]"
+                                :src="product.images[0].original_url"
                                 alt="Produto"
                             />
                         </a>
@@ -254,7 +254,7 @@
                 </PaginationPerPage>
 
                 <div>
-                    <PaginationPages :pages="props.product_pages" />
+                    <PaginationPages :pages="props.products" />
                 </div>
             </div>
         </div>
@@ -278,7 +278,7 @@ import { computed, reactive, watch } from "vue";
 import Close from "../../Icons/Close.vue";
 
 const props = defineProps({
-    product_pages: Object,
+    products: Object,
     product_count: Object,
     categories_all: Array,
     product_status_array: Array,
