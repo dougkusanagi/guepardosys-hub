@@ -58,7 +58,7 @@ class ProductController extends Controller
             'product_model_prefixes' => ProductModelPrefix::all(),
             'product_status_enum' => collect(ProductStatusEnum::asSelectArray())
                 ->map(fn ($status, $index) => ['id' => $index, 'name' => $status]),
-            'categories_all' => Category::all(),
+            'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
             'images' => $product->getMedia('images'),
         ]);
     }
