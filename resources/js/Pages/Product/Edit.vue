@@ -44,12 +44,11 @@
 
                         <div>
                             <FilepondInput
-                                ref="filepond_input_ref"
-                                name="filepond_files[]"
+                                ref="filepond_images_ref"
                                 label-idle="Arraste arquivos aqui..."
                                 v-bind:allow-multiple="true"
                                 accepted-file-types="image/jpeg, image/png, image/webp"
-                                :form="form"
+                                :filepond_files="form.images"
                             />
                         </div>
 
@@ -529,10 +528,10 @@ const form = useForm({
     product_model_prefix_id:
         props.product.product_model.product_model_prefix.id,
     product_model_digits: props.product.product_model.digits,
-    filepond_files: [],
+    images: [],
 });
 
-const filepond_input_ref = ref(null);
+const filepond_images_ref = ref(null);
 
 const categories_all_complete = computed(() => {
     return [{ name: "Escolha a categoria", id: "" }, ...props.categories_all];
@@ -540,12 +539,18 @@ const categories_all_complete = computed(() => {
 
 watch(form, (new_data) => (form.slug = slugfy(new_data.name)));
 
+form.transform((data) => {
+    return {
+        ...data,
+        images: data.images.map((item) => item.serverId),
+    };
+});
+
 function submit() {
     form.put(route("product.update", props.product.id), {
         onSuccess: () => {
-            console.log(filepond_input_ref.filepond_ref);
-            filepond_input_ref.value.filepond_ref.removeFiles();
-            form.filepond_files = [];
+            filepond_images_ref.value.filepond_ref.removeFiles();
+            form.images = [];
         },
     });
 }
