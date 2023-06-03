@@ -23,6 +23,7 @@ class ProductFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name, '-'),
+            'model' => random_int(1, 9999999999999),
             'description' => fake()->text(),
             'description_html' => fake()->text(400),
             'price' => fake()->randomNumber(4, true),
@@ -30,7 +31,9 @@ class ProductFactory extends Factory
             'stock_local' => fake()->randomNumber(2),
             'stock_local_min' => fake()->randomNumber(2),
             'status' => fake()->randomElement([
-                ProductStatusEnum::Active, ProductStatusEnum::Inactive, ProductStatusEnum::Waiting
+                ProductStatusEnum::Active,
+                ProductStatusEnum::Inactive,
+                ProductStatusEnum::Waiting,
             ]),
             'barcode' => fake()->ean13(),
             'ncm' => fake()->randomNumber(8, true),
@@ -38,7 +41,7 @@ class ProductFactory extends Factory
             'height' => fake()->randomNumber(4, true),
             'width' => fake()->randomNumber(4, true),
             'length' => fake()->randomNumber(4, true),
-            'brand' => env('APP_NAME'),
+            'brand' => config('APP_NAME', 'Laravel'),
             'availability' => fake()->randomDigit(),
             'keywords' => implode(',', fake()->words(5)),
         ];

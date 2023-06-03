@@ -146,43 +146,23 @@
                                         {{ option.name }}
                                     </option>
                                 </FormSelect>
+
                                 <p class="text-rose-700">{{ errors.status }}</p>
                             </div>
 
                             <div class="w-full md:w-1/3 mb-4">
-                                <FormLabel for="product_model_prefix_id"
+                                <FormLabel for="product_model"
                                     >Modelo</FormLabel
                                 >
 
-                                <FormSelect
-                                    id="product_model_prefix_id"
-                                    v-model="form.product_model_prefix_id"
-                                >
-                                    <option
-                                        v-for="option in product_model_prefixes"
-                                        :value="option.id"
-                                        :key="option.id"
-                                    >
-                                        {{ option.name }}
-                                    </option>
-                                </FormSelect>
-                                <p class="text-rose-700">
-                                    {{ errors.product_model_prefix_id }}
-                                </p>
-                            </div>
-
-                            <div class="w-full md:w-1/3 mb-4">
-                                <FormLabel for="product_model_digits"
-                                    >Dígitos</FormLabel
-                                >
-
                                 <FormInputText
-                                    id="product_model_digits"
-                                    v-model="form.product_model_digits"
+                                    id="product_model"
+                                    v-model="form.product_model"
                                     type="number"
                                 />
+
                                 <p class="text-rose-700">
-                                    {{ errors.product_model_digits }}
+                                    {{ errors.product_model }}
                                 </p>
                             </div>
                         </div>
@@ -488,7 +468,6 @@ const sidenavScrolltoLinks = [
 ];
 
 const props = defineProps({
-    product_model_prefixes: Array,
     product_status_enum: Array,
     categories_all: Array,
     product: Object,

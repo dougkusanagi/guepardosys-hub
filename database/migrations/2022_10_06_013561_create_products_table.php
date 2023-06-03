@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Category::class)->constrained();
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->string('model', 50)->unique();
             $table->integer('price')->default(0);
             $table->text('description')->nullable();
             $table->text('description_html')->nullable();

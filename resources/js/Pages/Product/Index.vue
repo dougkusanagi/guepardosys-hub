@@ -25,34 +25,34 @@
             <div class="flex mb-6 border-b border-slate-300">
                 <TabsFilterByStatusLink
                     :isActive="!route().params.status"
-                    :count="props.product_count.total"
+                    :count="props.product_count_array.total"
                     label="Todos"
                     @click="filterByStatus(null)"
                 />
 
                 <TabsFilterByStatusLink
                     :isActive="
-                        route().params.status === product_status_all.Active
+                        route().params.status === String(product_status_all.Active)
                     "
-                    :count="props.product_count.totalActive"
+                    :count="props.product_count_array.totalActive"
                     label="Ativos"
                     @click="filterByStatus(product_status_all.Active)"
                 />
 
                 <TabsFilterByStatusLink
                     :isActive="
-                        route().params.status === product_status_all.Inactive
+                        route().params.status === String(product_status_all.Inactive)
                     "
-                    :count="props.product_count.totalInactive"
+                    :count="props.product_count_array.totalInactive"
                     label="Inativos"
                     @click="filterByStatus(product_status_all.Inactive)"
                 />
 
                 <TabsFilterByStatusLink
                     :isActive="
-                        route().params.status === product_status_all.Waiting
+                        route().params.status === String(product_status_all.Waiting)
                     "
-                    :count="props.product_count.totalWaiting"
+                    :count="props.product_count_array.totalWaiting"
                     label="Aguardando"
                     @click="filterByStatus(product_status_all.Waiting)"
                 />
@@ -271,7 +271,7 @@ import DashboardLayout from "@/Layout/DashboardLayout.vue";
 
 const props = defineProps({
     products: Object,
-    product_count: Object,
+    product_count_array: Object,
     categories_all: Array,
     product_status_array: Array,
     product_status_all: Object,

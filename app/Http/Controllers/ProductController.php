@@ -5,33 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Enums\ProductStatusEnum;
-use App\Models\ProductModelPrefix;
 use App\Services\ProductImageService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\User;
 use App\Services\ProductModelService;
 use App\Services\ProductService;
-use RahulHaque\Filepond\Facades\Filepond;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 
 class ProductController extends Controller
 {
     public function index()
     {
         return inertia('Product/Index', [
-            'products' =>
-            Product::query()
+            'products' => Product::query()
                 ->whereBelongsTo(auth()->user()->company)
                 ->with(['category'])
                 ->filter()
-                ->paginate(request('per_page'))
+                ->orderBy('name')
+                ->paginate(request('per_page', Product::perPage))
                 ->withQueryString(),
-            'product_status_array' => ProductStatusEnum::asSelectArray(),
-            'product_status_all' => $this->getProductStatusAll(),
-            'product_count' => ProductService::getStatusCounts(),
+            'product_status_array' => ProductStatusEnum::names(),
+            'product_status_all' => ProductStatusEnum::array(),
+            'product_count_array' => ProductService::getStatusCounts(),
             'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
             'per_page' => request('per_page', Product::perPage),
         ]);
@@ -39,45 +34,38 @@ class ProductController extends Controller
 
     public function create()
     {
-        // Session::now('info', 'Você não tem permissão para criar produtos');
-
         return inertia('Product/Create', [
-            'product_model_prefixes' => ProductModelPrefix::all(),
             'product_status_enum' => collect(ProductStatusEnum::asSelectArray())
                 ->map(fn ($status, $index) => ['id' => $index, 'name' => $status]),
             'categories_all' => Category::all(),
         ]);
     }
 
-    public function edit(Product $product, User $user)
-    {
-        $this->authorize('update', $product);
-
-        return inertia('Product/Edit', [
-            'product' => $product,
-            'product_model_prefixes' => ProductModelPrefix::all(),
-            'product_status_enum' => collect(ProductStatusEnum::asSelectArray())
-                ->map(fn ($status, $index) => ['id' => $index, 'name' => $status]),
-            'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
-            'images' => $product->getMedia('images'),
-        ]);
-    }
-
     public function store(StoreProductRequest $request)
     {
         $product = Product::create($request->validated() + ['company_id' => auth()->user()->company_id]);
-        ProductModelService::register($request, $product);
         ProductImageService::registerCollections($request, $product);
 
         return to_route('product.edit', $product)
             ->with('success', 'Produto cadastrado com sucesso');
     }
 
+    public function edit(Product $product)
+    {
+        $this->authorize('update', $product);
+
+        return inertia('Product/Edit', [
+            'product' => $product,
+            'product_status_enum' => ProductStatusEnum::asSelectArray(),
+            'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
+            'images' => $product->getMedia('images'),
+        ]);
+    }
+
     public function update(UpdateProductRequest $request, Product $product)
     {
         $this->authorize('update', $product);
         $product->update($request->validated());
-        ProductModelService::update($request, $product);
         ProductImageService::registerCollections($request, $product);
 
         return back()
@@ -90,15 +78,5 @@ class ProductController extends Controller
 
         return back()
             ->with('success', 'Produto removido com sucesso');
-    }
-
-    public function getProductStatusAll()
-    {
-        $product_status_all = [];
-        foreach (ProductStatusEnum::asArray() as $index => $status) {
-            $product_status_all[$index] = (string) $status;
-        }
-
-        return collect($product_status_all);
     }
 }

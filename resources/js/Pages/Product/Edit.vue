@@ -153,43 +153,23 @@
                                         {{ option.name }}
                                     </option>
                                 </FormSelect>
+
                                 <p class="text-rose-700">{{ errors.status }}</p>
                             </div>
 
                             <div class="w-full md:w-1/3 mb-4">
-                                <FormLabel for="product_model_prefix_id"
+                                <FormLabel for="model"
                                     >Modelo</FormLabel
                                 >
 
-                                <FormSelect
-                                    id="product_model_prefix_id"
-                                    v-model="form.product_model_prefix_id"
-                                >
-                                    <option
-                                        v-for="option in product_model_prefixes"
-                                        :value="option.id"
-                                        :key="option.id"
-                                    >
-                                        {{ option.name }}
-                                    </option>
-                                </FormSelect>
-                                <p class="text-rose-700">
-                                    {{ errors.product_model_prefix_id }}
-                                </p>
-                            </div>
-
-                            <div class="w-full md:w-1/3 mb-4">
-                                <FormLabel for="product_model_digits"
-                                    >Dígitos</FormLabel
-                                >
-
                                 <FormInputText
-                                    id="product_model_digits"
-                                    v-model="form.product_model_digits"
+                                    id="model"
+                                    v-model="form.model"
                                     type="number"
                                 />
+
                                 <p class="text-rose-700">
-                                    {{ errors.product_model_digits }}
+                                    {{ errors.model }}
                                 </p>
                             </div>
                         </div>
@@ -211,6 +191,7 @@
                                     type="number"
                                     v-model="form.barcode"
                                 />
+
                                 <p class="text-rose-700">
                                     {{ errors.barcode }}
                                 </p>
@@ -496,7 +477,6 @@ const sidenavScrolltoLinks = [
 ];
 
 const props = defineProps({
-    product_model_prefixes: Array,
     product_status_enum: Array,
     categories_all: Array,
     product: Object,
@@ -509,6 +489,7 @@ const form = useForm({
     category_id: props.product.category_id,
     name: props.product.name,
     slug: props.product.slug,
+    model: props.product.model,
     price: props.product.price,
     description: props.product.description,
     description_html: props.product.description_html,
@@ -525,9 +506,6 @@ const form = useForm({
     keywords: props.product.keywords,
     status: props.product.status,
     brand: props.product.brand,
-    product_model_prefix_id:
-        props.product.product_model.product_model_prefix.id,
-    product_model_digits: props.product.product_model.digits,
     images: [],
 });
 

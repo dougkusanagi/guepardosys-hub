@@ -12,7 +12,11 @@ class ProductImageService
     public static function registerCollections(StoreProductRequest|UpdateProductRequest $request, Product $product)
     {
         foreach (['images'] as $collection) {
-            self::registerCollection($request->{$collection}, $product, $collection);
+            self::registerCollection(
+                $request->{$collection},
+                $product,
+                $collection
+            );
         }
     }
 
