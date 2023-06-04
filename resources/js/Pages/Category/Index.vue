@@ -16,7 +16,7 @@
                                 <PlusIcon />
                             </template>
 
-                            Cadastrar Produto
+                            Cadastrar Categoria
                         </LayoutButton>
                     </div>
                 </template>
@@ -31,7 +31,7 @@
                 </PaginationPerPage>
 
                 <div>
-                    <!-- <PaginationPages :pages="props.categories" /> -->
+                    <PaginationPages :pages="props.categories" />
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
                         <FormInputText
                             placeholder="Digite o nome da categoria..."
                             type="search"
-                            v-model="queryParams.search"
+                            v-model="queryParams.name"
                         />
                     </div>
 
@@ -133,8 +133,8 @@
 </template>
 
 <script setup>
-import { Head } from "@inertiajs/vue3";
-import { reactive } from "vue";
+import { Head, router } from "@inertiajs/vue3";
+import { reactive, watch } from "vue";
 import DashboardLayout from "@/Layout/DashboardLayout.vue";
 import LayoutSection from "@/Components/LayoutSection.vue";
 import LayoutHeader from "@/Components/LayoutHeader.vue";
@@ -143,18 +143,12 @@ import FormInputText from "@/Components/Form/FormInputText.vue";
 import PaginationPerPage from "@/Components/PaginationPerPage.vue";
 import PlusIcon from "@/Icons/Plus.vue";
 import ArrowUp from "@/Icons/ArrowUp.vue";
-import Close from "../../Icons/Close.vue";
+import Close from "@/Icons/Close.vue";
+import PaginationPages from "@/Components/PaginationPages.vue";
 
 const props = defineProps({
     categories: Object,
     per_page: String,
-});
-
-const queryParams = reactive({
-    search: "",
-    order_by: "name",
-    direction: "asc",
-    per_page: props.per_page,
 });
 
 const breadcrumbsLinks = [
@@ -170,4 +164,22 @@ const breadcrumbsLinks = [
         label: "Listar",
     },
 ];
+
+const queryParams = reactive({
+    name: "",
+    order_by: "name",
+    direction: "asc",
+    per_page: props.per_page,
+});
+
+watch(
+    queryParams,
+    () => {
+        router.get(route("category.index"), queryParams, {
+            replace: true,
+            preserveState: true,
+        });
+    },
+    { deep: true }
+);
 </script>

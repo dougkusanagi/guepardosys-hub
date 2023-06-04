@@ -11,33 +11,41 @@ class CategoryController extends Controller
     public function index()
     {
         return inertia('Category/Index', [
-            'categories' => Category::query()
-                ->whereBelongsTo(auth()->user()->company)
-                ->filter()
-                ->paginate(request('per_page'))
-                ->withQueryString(),
+            'categories' => Category::paginated(),
             'per_page' => request('per_page', Category::perPage),
         ]);
     }
 
     public function create()
     {
-        //
+        return inertia('Category/Create');
     }
 
     public function store(StoreCategoryRequest $request)
     {
-        //
+        $category = Category::create($request->validated() + ['company_id' => auth()->user()->company_id]);
+
+        return to_route('category.edit', $category)
+            ->with('success', 'Categoria cadastrado com sucesso');
     }
 
     public function edit(Category $category)
     {
-        //
+        $this->authorize('update', $category);
+
+        return inertia('Category/Edit', [
+            'category' => $category,
+        ]);
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        $this->authorize('update', $category);
+
+        $category->update($request->validated());
+
+        return back()
+            ->with('success', 'Categoria atualizado com sucesso');
     }
 
     public function destroy(Category $category)

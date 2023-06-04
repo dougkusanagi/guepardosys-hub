@@ -20,10 +20,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory;
-    use InteractsWithMedia;
-    use BelongsToCategory;
-    use BelongsToCompany;
+    use HasFactory, InteractsWithMedia, BelongsToCategory, BelongsToCompany;
 
     public const perPage = "25";
     protected $guarded = [];
@@ -51,7 +48,6 @@ class Product extends Model implements HasMedia
         return $query->whereBelongsTo(auth()->user()->company)
             ->with(['category'])
             ->filter()
-            ->orderBy('name')
             ->paginate(request('per_page', Product::perPage))
             ->withQueryString();
     }

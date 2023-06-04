@@ -266,7 +266,7 @@ import PaginationPerPage from "@/Components/PaginationPerPage.vue";
 import TabsFilterByStatusLink from "@/Components/TabsFilterByStatusLink.vue";
 import ArrowUp from "@/Icons/ArrowUp.vue";
 import PlusIcon from "@/Icons/Plus.vue";
-import Close from "../../Icons/Close.vue";
+import Close from "@/Icons/Close.vue";
 import DashboardLayout from "@/Layout/DashboardLayout.vue";
 
 const props = defineProps({

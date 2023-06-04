@@ -2,6 +2,9 @@
 
 namespace App\DataTransferObjects;
 
-readonly class BaseDto
+use Illuminate\Http\Request;
+
+interface BaseDto
 {
+    public static function fromRequest(Request $request);
 }
