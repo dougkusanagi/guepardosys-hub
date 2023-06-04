@@ -2,50 +2,58 @@
 
 namespace App\Models;
 
-use App\Enums\ProductStatusEnum;
+use App\DataTransferObjects\ProductFilterDto;
+use App\Filters\CategoryFilter;
+use App\Filters\Filterable;
+use App\Filters\NameFilter;
+use App\Filters\OrderByFilter;
+use App\Filters\StatusFilter;
+use App\Traits\Relationship\BelongsToCategory;
+use App\Traits\Relationship\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Pipeline;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory;
+    use InteractsWithMedia;
+    use BelongsToCategory;
+    use BelongsToCompany;
 
     public const perPage = "25";
     protected $guarded = [];
     protected $appends = ['images'];
 
-    public function category(): BelongsTo
+    public function scopeFilter(Builder $query)
     {
-        return $this->belongsTo(Category::class);
+        $filterable = Pipeline::send(new Filterable(
+            $query,
+            ProductFilterDto::fromRequest(request())
+        ))
+            ->through([
+                NameFilter::class,
+                CategoryFilter::class,
+                StatusFilter::class,
+                OrderByFilter::class,
+            ])
+            ->thenReturn();
+
+        return $filterable->builder;
     }
 
-    public function company(): BelongsTo
+    public function scopePaginated(Builder $query): LengthAwarePaginator
     {
-        return $this->belongsTo(Company::class);
-    }
-
-    public function scopeStatus(Builder $query): Builder
-    {
-        return $query->where('status', request('status'));
-    }
-
-    public function scopeSearch(Builder $query): Builder
-    {
-        return $query->where('name', 'like', request('search') . '%');
-    }
-
-    public function scopeFilter(Builder $query): Builder
-    {
-        return $query
-            ->when(request('category'), fn ($query, $category_id) => $query->where('category_id', $category_id))
-            ->when(request('order_by'), fn ($query, $field) => $query->orderBy($field, request('direction')))
-            ->when(request('status') !== null,  fn ($query) => $query->status())
-            ->when(request('search'), fn ($query) => $query->search());
+        return $query->whereBelongsTo(auth()->user()->company)
+            ->with(['category'])
+            ->filter()
+            ->orderBy('name')
+            ->paginate(request('per_page', Product::perPage))
+            ->withQueryString();
     }
 
     public function getImagesAttribute()

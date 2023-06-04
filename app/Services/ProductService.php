@@ -18,7 +18,7 @@ class ProductService
         return collect(compact('totalActive', 'totalInactive', 'totalWaiting', 'total'));
     }
 
-    public static function getStatusCounts()
+    public static function getStatusCountArray()
     {
         return (new static)->getStatusCountsArray();
     }

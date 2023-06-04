@@ -17,16 +17,10 @@ class ProductController extends Controller
     public function index()
     {
         return inertia('Product/Index', [
-            'products' => Product::query()
-                ->whereBelongsTo(auth()->user()->company)
-                ->with(['category'])
-                ->filter()
-                ->orderBy('name')
-                ->paginate(request('per_page', Product::perPage))
-                ->withQueryString(),
+            'products' => Product::paginated(),
             'product_status_array' => ProductStatusEnum::names(),
             'product_status_all' => ProductStatusEnum::array(),
-            'product_count_array' => ProductService::getStatusCounts(),
+            'product_count_array' => ProductService::getStatusCountArray(),
             'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
             'per_page' => request('per_page', Product::perPage),
         ]);
@@ -35,8 +29,7 @@ class ProductController extends Controller
     public function create()
     {
         return inertia('Product/Create', [
-            'product_status_enum' => collect(ProductStatusEnum::asSelectArray())
-                ->map(fn ($status, $index) => ['id' => $index, 'name' => $status]),
+            'product_status_enum' => ProductStatusEnum::asSelectArray(),
             'categories_all' => Category::all(),
         ]);
     }

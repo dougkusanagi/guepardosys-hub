@@ -77,7 +77,7 @@
                         <FormInputText
                             placeholder="Digite o nome do produto..."
                             type="search"
-                            v-model="queryParams.search"
+                            v-model="queryParams.name"
                         />
                     </div>
 
@@ -293,11 +293,11 @@ const breadcrumbsLinks = [
 ];
 
 const queryParams = reactive({
-    search: "",
+    name: "",
+    category: "",
+    status: "",
     order_by: "name",
     direction: "asc",
-    status: "",
-    category: "",
     per_page: props.per_page,
 });
 
