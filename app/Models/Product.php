@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use App\DataTransferObjects\ProductFilterDto;
-use App\Filters\CategoryFilter;
-use App\Filters\Filterable;
-use App\Filters\NameFilter;
+use App\Filters\ByCategoryFilter;
+use App\Filters\ByNameFilter;
+use App\Filters\ByStatusFilter;
 use App\Filters\OrderByFilter;
-use App\Filters\StatusFilter;
-use App\Traits\Relationship\BelongsToCategory;
-use App\Traits\Relationship\BelongsToCompany;
+use App\Traits\Relationships\BelongsToCategory;
+use App\Traits\Relationships\BelongsToCompany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Pipeline;
 use Spatie\MediaLibrary\HasMedia;
@@ -25,22 +23,18 @@ class Product extends Model implements HasMedia
     public const perPage = "25";
     protected $guarded = [];
     protected $appends = ['images'];
+    protected $queryFilters = [
+        ByNameFilter::class,
+        ByCategoryFilter::class,
+        ByStatusFilter::class,
+        OrderByFilter::class,
+    ];
 
-    public function scopeFilter(Builder $query)
+    public function scopeFilter(Builder $builder)
     {
-        $filterable = Pipeline::send(new Filterable(
-            $query,
-            ProductFilterDto::fromRequest(request())
-        ))
-            ->through([
-                NameFilter::class,
-                CategoryFilter::class,
-                StatusFilter::class,
-                OrderByFilter::class,
-            ])
+        return Pipeline::send($builder)
+            ->through($this->queryFilters)
             ->thenReturn();
-
-        return $filterable->builder;
     }
 
     public function scopePaginated(Builder $query): LengthAwarePaginator
@@ -57,7 +51,7 @@ class Product extends Model implements HasMedia
         return !$this->getMedia('images')->isEmpty()
             ? $this->getMedia('images')
             : [
-                ['original_url' => '/img/no-image.png']
+                ['original_url' => '/img/no-image.png'],
             ];
     }
 }

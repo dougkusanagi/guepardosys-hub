@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class OrderByFilter
+class ByCategoryFilter
 {
     public function __construct(
         private Request $request
@@ -16,8 +16,8 @@ class OrderByFilter
     {
         return $next($builder)
             ->when(
-                $this->request->order_by,
-                fn($query) => $query->orderBy($this->request->order_by, $this->request->direction ?? 'asc')
+                $this->request->category,
+                fn($query) => $query->where('category_id', $this->request->category)
             );
     }
 }

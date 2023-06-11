@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Category;
 use App\Enums\ProductStatusEnum;
-use App\Services\ProductImageService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Models\User;
-use App\Services\ProductModelService;
+use App\Models\Category;
+use App\Models\Product;
+use App\Services\ProductImageService;
 use App\Services\ProductService;
 
 class ProductController extends Controller
@@ -18,10 +16,10 @@ class ProductController extends Controller
     {
         return inertia('Product/Index', [
             'products' => Product::paginated(),
-            'product_status_array' => ProductStatusEnum::names(),
+            'product_status_array' => ProductStatusEnum::arrayFliped(),
             'product_status_all' => ProductStatusEnum::array(),
             'product_count_array' => ProductService::getStatusCountArray(),
-            'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
+            'categories_all' => Category::select('id', 'name')->whereBelongsTo(auth()->user()->company)->get(),
             'per_page' => request('per_page', Product::perPage),
         ]);
     }
@@ -30,7 +28,7 @@ class ProductController extends Controller
     {
         return inertia('Product/Create', [
             'product_status_enum' => ProductStatusEnum::asSelectArray(),
-            'categories_all' => Category::all(),
+            'categories_all' => Category::select('id', 'name')->whereBelongsTo(auth()->user()->company)->get(),
         ]);
     }
 
@@ -50,7 +48,7 @@ class ProductController extends Controller
         return inertia('Product/Edit', [
             'product' => $product,
             'product_status_enum' => ProductStatusEnum::asSelectArray(),
-            'categories_all' => Category::whereBelongsTo(auth()->user()->company)->get(),
+            'categories_all' => Category::select('id', 'name')->whereBelongsTo(auth()->user()->company)->get(),
             'images' => $product->getMedia('images'),
         ]);
     }

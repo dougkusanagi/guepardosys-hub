@@ -25,34 +25,37 @@
             <div class="flex mb-6 border-b border-slate-300">
                 <TabsFilterByStatusLink
                     :isActive="!route().params.status"
-                    :count="props.product_count_array.total"
+                    :count="product_count_array.total"
                     label="Todos"
                     @click="filterByStatus(null)"
                 />
 
                 <TabsFilterByStatusLink
                     :isActive="
-                        route().params.status === String(product_status_all.Active)
+                        route().params.status ===
+                        String(product_status_all.Active)
                     "
-                    :count="props.product_count_array.totalActive"
+                    :count="product_count_array.totalActive"
                     label="Ativos"
                     @click="filterByStatus(product_status_all.Active)"
                 />
 
                 <TabsFilterByStatusLink
                     :isActive="
-                        route().params.status === String(product_status_all.Inactive)
+                        route().params.status ===
+                        String(product_status_all.Inactive)
                     "
-                    :count="props.product_count_array.totalInactive"
+                    :count="product_count_array.totalInactive"
                     label="Inativos"
                     @click="filterByStatus(product_status_all.Inactive)"
                 />
 
                 <TabsFilterByStatusLink
                     :isActive="
-                        route().params.status === String(product_status_all.Waiting)
+                        route().params.status ===
+                        String(product_status_all.Waiting)
                     "
-                    :count="props.product_count_array.totalWaiting"
+                    :count="product_count_array.totalWaiting"
                     label="Aguardando"
                     @click="filterByStatus(product_status_all.Waiting)"
                 />
@@ -67,7 +70,7 @@
                 </PaginationPerPage>
 
                 <div>
-                    <PaginationPages :pages="props.products" />
+                    <PaginationPages :pages="products" />
                 </div>
             </div>
 
@@ -96,7 +99,7 @@
                     <span
                         class="flex items-center justify-center flex-1 ml text-[#969bba] text-center"
                     >
-                        {{ props.products.total }} encontrados
+                        {{ products.total }} encontrados
                     </span>
                 </div>
 
@@ -162,7 +165,7 @@
 
                 <div
                     class="bg-white border-slate-200 overflow-hidden shadow-sm dark:bg-[#11183C] -ml-4 -mr-4 dark:border-slate-700"
-                    v-for="product in props.products.data"
+                    v-for="product in products.data"
                     :key="product.id"
                 >
                     <div class="flex items-center space-x-4 py-4 px-6">
@@ -192,20 +195,20 @@
 
                         <div class="flex">
                             <div
-                                class="flex items-center mr-4"
+                                class="flex items-center mr-4 badge py-3"
                                 :class="{
-                                    'text-emerald-400':
+                                    'badge-success':
                                         product.status ==
                                         product_status_all.Active,
-                                    'text-red-400':
+                                    'badge-error':
                                         product.status ==
                                         product_status_all.Inactive,
-                                    'text-yellow-500':
+                                    'badge-warning':
                                         product.status ==
                                         product_status_all.Waiting,
                                 }"
                             >
-                                <div
+                                <!-- <div
                                     class="w-2 h-2 rounded-full mr-2"
                                     :class="{
                                         'bg-emerald-400':
@@ -218,7 +221,7 @@
                                             product.status ==
                                             product_status_all.Waiting,
                                     }"
-                                ></div>
+                                ></div> -->
                                 {{ product_status_array[product.status] }}
                             </div>
 
@@ -246,7 +249,7 @@
                 </PaginationPerPage>
 
                 <div>
-                    <PaginationPages :pages="props.products" />
+                    <PaginationPages :pages="products" />
                 </div>
             </div>
         </div>

@@ -23,7 +23,10 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request)
     {
-        $category = Category::create($request->validated() + ['company_id' => auth()->user()->company_id]);
+        $category = Category::create(
+            $request->validated() +
+                ['company_id' => auth()->user()->company_id]
+        );
 
         return to_route('category.edit', $category)
             ->with('success', 'Categoria cadastrado com sucesso');

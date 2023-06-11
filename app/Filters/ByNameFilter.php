@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class OrderByFilter
+class ByNameFilter
 {
     public function __construct(
         private Request $request
@@ -16,8 +16,8 @@ class OrderByFilter
     {
         return $next($builder)
             ->when(
-                $this->request->order_by,
-                fn($query) => $query->orderBy($this->request->order_by, $this->request->direction ?? 'asc')
+                $this->request->name,
+                fn($query) => $query->where('name', 'REGEXP', $this->request->name)
             );
     }
 }

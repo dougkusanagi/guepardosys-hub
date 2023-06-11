@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\DataTransferObjects\CategoryFilterDto;
-use App\Filters\Filterable;
-use App\Filters\NameFilter;
+use App\Filters\ByNameFilter;
 use App\Filters\OrderByFilter;
-use App\Traits\Relationship\BelongsToCompany;
+use App\Traits\Relationships\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,25 +19,21 @@ class Category extends Model
 
     public const perPage = "25";
     protected $guarded = [];
+    protected $queryFilters = [
+        ByNameFilter::class,
+        OrderByFilter::class,
+    ];
 
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
-    public function scopeFilter(Builder $query)
+    public function scopeFilter(Builder $builder)
     {
-        $filterable = Pipeline::send(new Filterable(
-            $query,
-            CategoryFilterDto::fromRequest(request())
-        ))
-            ->through([
-                NameFilter::class,
-                OrderByFilter::class,
-            ])
+        return Pipeline::send($builder)
+            ->through($this->queryFilters)
             ->thenReturn();
-
-        return $filterable->builder;
     }
 
     public function scopePaginated(Builder $query): LengthAwarePaginator

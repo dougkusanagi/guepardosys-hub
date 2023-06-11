@@ -35,7 +35,7 @@ return new class extends Migration
             $table->float('length')->default(0);
             $table->integer('availability')->default(0);
             $table->text('keywords')->nullable();
-            $table->integer('status')->default(ProductStatusEnum::Active);
+            $table->integer('status')->default(ProductStatusEnum::Active->value);
             $table->string('brand')->nullable();
             $table->timestamps();
             $table->softDeletes();

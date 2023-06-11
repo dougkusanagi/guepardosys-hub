@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-use App\Traits\Enum\EnumToArray;
+use App\Traits\Enums\EnumToArray;
 use Illuminate\Support\Collection;
 
 enum ProductStatusEnum: int

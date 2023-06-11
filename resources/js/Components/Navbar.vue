@@ -47,7 +47,7 @@ const navbarItems = [
     {
         id: 1,
         label: "Produtos",
-        link: route("product.index"),
+        link: route("product.index", { order_by: "name" }),
         icon: Bag,
         starts_with: "Product/",
     },
