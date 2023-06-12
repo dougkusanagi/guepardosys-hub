@@ -1,7 +1,12 @@
 <?php
 
+use App\Models\Company;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+
+use function Pest\Laravel\actingAs;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +47,9 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function asUser(array $attributes = []): TestCase
 {
-    // ..
+    $company = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $company->id, ...$attributes]);
+    return actingAs($user);
 }
