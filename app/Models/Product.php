@@ -50,8 +50,8 @@ class Product extends Model implements HasMedia
     {
         return !$this->getMedia('images')->isEmpty()
             ? $this->getMedia('images')
-            : [
-                ['original_url' => '/img/no-image.png'],
-            ];
+            : null;
+
+        // old [['original_url' => '/img/no-image.png']]
     }
 }
