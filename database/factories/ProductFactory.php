@@ -31,9 +31,9 @@ class ProductFactory extends Factory
             'stock_local' => fake()->randomNumber(2),
             'stock_local_min' => fake()->randomNumber(2),
             'status' => fake()->randomElement([
-                ProductStatusEnum::Active,
-                ProductStatusEnum::Inactive,
-                ProductStatusEnum::Waiting,
+                ProductStatusEnum::Active->value,
+                ProductStatusEnum::Inactive->value,
+                ProductStatusEnum::Waiting->value,
             ]),
             'barcode' => fake()->ean13(),
             'ncm' => fake()->randomNumber(8, true),
