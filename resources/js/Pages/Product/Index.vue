@@ -174,7 +174,7 @@
                         <a href="#">
                             <img
                                 class="w-16 h-16 object-fill rounded-full"
-                                :src="product.images[0].original_url"
+                                :src="getProductThumb(product)"
                                 alt="Produto"
                             />
                         </a>
@@ -331,4 +331,10 @@ const filterByStatus = (status) => (queryParams.status = status);
 const categories_all_complete = computed(() => {
     return [{ name: "Todas as categorias", id: "" }, ...props.categories_all];
 });
+
+const getProductThumb = (product) => {
+    return product.images !== null && product.images.lenght
+        ? product.images[0].original_url
+        : "/img/no-image.png";
+};
 </script>
