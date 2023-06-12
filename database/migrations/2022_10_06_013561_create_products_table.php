@@ -17,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Category::class)->constrained();
+            $table->foreignIdFor(Category::class)->nullable();
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->string('model', 50)->unique();
