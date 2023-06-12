@@ -59,15 +59,16 @@ class ProductController extends Controller
         $product->update($request->validated());
         ProductImageService::registerCollections($request, $product);
 
-        return back()
+        return to_route('product.edit', $product)
             ->with('success', 'Produto atualizado com sucesso');
     }
 
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
         $product->delete();
 
-        return back()
+        return to_route('product.index')
             ->with('success', 'Produto removido com sucesso');
     }
 }
