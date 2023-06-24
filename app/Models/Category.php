@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Pipeline;
 
 class Category extends Model
 {
@@ -19,7 +18,7 @@ class Category extends Model
 
     public const perPage = "25";
     protected $guarded = [];
-    protected $queryFilters = [
+    protected $scopeFilters = [
         ByNameFilter::class,
         OrderByFilter::class,
     ];
@@ -27,13 +26,6 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
-    }
-
-    public function scopeFilter(Builder $builder)
-    {
-        return Pipeline::send($builder)
-            ->through($this->queryFilters)
-            ->thenReturn();
     }
 
     public function scopePaginated(Builder $query): LengthAwarePaginator

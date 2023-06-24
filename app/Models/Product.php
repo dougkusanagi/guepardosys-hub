@@ -8,34 +8,27 @@ use App\Filters\ByStatusFilter;
 use App\Filters\OrderByFilter;
 use App\Traits\Relationships\BelongsToCategory;
 use App\Traits\Relationships\BelongsToCompany;
+use App\Traits\Scope\ScopeFilterTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Pipeline;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, BelongsToCategory, BelongsToCompany;
+    use HasFactory, InteractsWithMedia, BelongsToCategory, BelongsToCompany, ScopeFilterTrait;
 
     public const perPage = "25";
     protected $guarded = [];
     protected $appends = ['images'];
-    protected $queryFilters = [
+    protected $scopeFilters = [
         ByNameFilter::class,
         ByCategoryFilter::class,
         ByStatusFilter::class,
         OrderByFilter::class,
     ];
-
-    public function scopeFilter(Builder $builder)
-    {
-        return Pipeline::send($builder)
-            ->through($this->queryFilters)
-            ->thenReturn();
-    }
 
     public function scopePaginated(Builder $query): LengthAwarePaginator
     {
