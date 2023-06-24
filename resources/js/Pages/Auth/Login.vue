@@ -42,7 +42,7 @@ const submit = () => {
                     autocomplete="username"
                 />
 
-                <span class="mt-2" :message="form.errors.email" />
+                <span class="mt-2 text-red-700" v-text="form.errors.email" />
             </div>
 
             <div class="mt-4">
@@ -59,8 +59,8 @@ const submit = () => {
 
                 <span
                     v-if="form.errors.password"
-                    class="mt-2"
-                    :message="form.errors.password"
+                    class="mt-2 text-red-700"
+                    v-text="form.errors.password"
                 />
             </div>
 
@@ -86,7 +86,7 @@ const submit = () => {
                     :href="route('password.request')"
                     class="underline text-sm text-gray-600 hover:text-gray-900"
                 >
-                    Forgot your password?
+                    Esqueceu a senha?
                 </Link>
 
                 <LayoutButton
@@ -95,7 +95,7 @@ const submit = () => {
                     :disabled="form.processing"
                     submit
                 >
-                    Log in
+                    Logar
                 </LayoutButton>
             </div>
         </form>
