@@ -181,7 +181,11 @@
 
                         <div class="flex flex-col flex-1 justify-center">
                             <h3 class="text-xs text-slate-400">
-                                {{ product.category.name }}
+                                {{
+                                    product.category
+                                        ? product.category.name
+                                        : "Sem Categoria"
+                                }}
                             </h3>
 
                             <h2 class="text-lg font-bold">
