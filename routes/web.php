@@ -9,7 +9,6 @@ Route::get('/', fn () => redirect()->route('product.index'))
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-
     Route::resource('/product', ProductController::class);
 
     Route::resource('/category', CategoryController::class);

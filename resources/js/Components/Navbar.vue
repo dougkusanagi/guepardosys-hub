@@ -20,7 +20,7 @@
                     :key="item.id"
                     :as="item.as"
                 >
-                    <component :is="item.icon"></component>
+                    <component :is="item.icon" />
                 </NavbarItem>
             </div>
         </div>
