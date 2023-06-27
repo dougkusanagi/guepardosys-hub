@@ -5,12 +5,12 @@ namespace App\DataTransferObjects;
 use App\Enums\ProductStatusEnum;
 use Illuminate\Http\Request;
 
-readonly class CategoryFilterDto implements BaseDto
+class CategoryFilterDto implements BaseDto
 {
     public function __construct(
-        public ?string $name = null,
-        public ?string $orderBy = null,
-        public ?string $direction = null,
+        readonly public ?string $name = null,
+        readonly public ?string $orderBy = null,
+        readonly public ?string $direction = null,
     ) {
     }
 
