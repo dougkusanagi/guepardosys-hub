@@ -212,20 +212,6 @@
                                         product_status_all.Waiting,
                                 }"
                             >
-                                <!-- <div
-                                    class="w-2 h-2 rounded-full mr-2"
-                                    :class="{
-                                        'bg-emerald-400':
-                                            product.status ==
-                                            product_status_all.Active,
-                                        'bg-red-400':
-                                            product.status ==
-                                            product_status_all.Inactive,
-                                        'bg-yellow-500':
-                                            product.status ==
-                                            product_status_all.Waiting,
-                                    }"
-                                ></div> -->
                                 {{ product_status_array[product.status] }}
                             </div>
 
@@ -337,8 +323,6 @@ const categories_all_complete = computed(() => {
 });
 
 const getProductThumb = (product) => {
-    return product.images !== null && product.images.lenght
-        ? product.images[0].original_url
-        : "/img/no-image.png";
+    return product.images.length ? product.images[0] : "/img/no-image.png";
 };
 </script>

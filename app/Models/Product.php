@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
@@ -43,8 +44,9 @@ class Product extends Model implements HasMedia
     {
         return !$this->getMedia('images')->isEmpty()
             ? $this->getMedia('images')
+            ->map(function (Media $media) {
+                return $media->getUrl();
+            })
             : null;
-
-        // old [['original_url' => '/img/no-image.png']]
     }
 }

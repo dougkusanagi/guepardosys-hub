@@ -7,7 +7,7 @@
                 class="flex items-center justify-center w-full text-center bg-rose-700/70 rounded-t-lg"
                 :href="
                     route('image.delete', {
-                        media_item: image,
+                        media_item: image.id,
                     })
                 "
                 method="delete"
@@ -24,10 +24,7 @@
             </a>
         </div>
 
-        <img
-            class="w-20 h-20 object-cover rounded-lg"
-            :src="image.original_url"
-        />
+        <img class="w-20 h-20 object-cover rounded-lg" :src="image.url" />
     </div>
 </template>
 

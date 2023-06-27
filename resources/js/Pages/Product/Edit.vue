@@ -158,9 +158,7 @@
                             </div>
 
                             <div class="w-full md:w-1/3 mb-4">
-                                <FormLabel for="model"
-                                    >Modelo</FormLabel
-                                >
+                                <FormLabel for="model">Modelo</FormLabel>
 
                                 <FormInputText
                                     id="model"
@@ -509,6 +507,13 @@ const form = useForm({
     images: [],
 });
 
+form.transform((data) => {
+    return {
+        ...data,
+        images: data.images.map((item) => item.serverId),
+    };
+});
+
 const filepond_images_ref = ref(null);
 
 const categories_all_complete = computed(() => {
@@ -516,13 +521,6 @@ const categories_all_complete = computed(() => {
 });
 
 watch(form, (new_data) => (form.slug = slugfy(new_data.name)));
-
-form.transform((data) => {
-    return {
-        ...data,
-        images: data.images.map((item) => item.serverId),
-    };
-});
 
 function submit() {
     form.put(route("product.update", props.product.id), {

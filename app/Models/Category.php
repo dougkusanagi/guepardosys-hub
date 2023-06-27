@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Filters\ByNameFilter;
 use App\Filters\OrderByFilter;
 use App\Traits\Relationships\BelongsToCompany;
+use App\Traits\Scope\ScopeFilterTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,8 +14,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Category extends Model
 {
-    use HasFactory;
-    use BelongsToCompany;
+    use HasFactory, BelongsToCompany, ScopeFilterTrait;
 
     public const perPage = "25";
     protected $guarded = [];

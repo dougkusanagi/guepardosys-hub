@@ -42,14 +42,13 @@
                     <LayoutSection id="section-images">
                         <template #header>Imagens</template>
 
-                        <div class="">
+                        <div>
                             <FilepondInput
-                                ref="filepond_input_ref"
-                                name="filepond_files[]"
+                                ref="filepond_images_ref"
                                 label-idle="Arraste arquivos aqui..."
                                 v-bind:allow-multiple="true"
                                 accepted-file-types="image/jpeg, image/png, image/webp"
-                                :form="form"
+                                :filepond_files="form.images"
                             />
                         </div>
                     </LayoutSection>
@@ -496,12 +495,21 @@ const form = useForm({
     status: "",
     brand: "",
     product_model_prefix_id: "",
-    filepond_files: [],
+    images: [],
+});
+
+form.transform((data) => {
+    console.log(data);
+    return {
+        ...data,
+        images: data.images.map((item) => item.serverId),
+    };
 });
 
 watch(form, (new_data) => (form.slug = slugfy(new_data.name)));
 
 const categories_all_complete = computed(() => {
+    console.log(props.categories_all);
     return [{ name: "Escolha a categoria", id: "" }, ...props.categories_all];
 });
 
