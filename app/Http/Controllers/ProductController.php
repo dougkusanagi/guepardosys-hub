@@ -9,11 +9,13 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\ProductImageService;
 use App\Services\ProductService;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         return inertia('Product/Index', [
             'products' => Product::paginated(),
@@ -28,7 +30,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         return inertia('Product/Create', [
             'product_status_enum' => ProductStatusEnum::asSelectArray(),
@@ -39,7 +41,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request): RedirectResponse
     {
         $product = Product::create($request->validated() + ['company_id' => auth()->user()->company_id]);
         ProductImageService::registerCollections($request, $product);
@@ -48,7 +50,7 @@ class ProductController extends Controller
             ->with('success', 'Produto cadastrado com sucesso');
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product): Response
     {
         $this->authorize('update', $product);
 
@@ -66,7 +68,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
         $this->authorize('update', $product);
         $product->update($request->validated());
@@ -76,7 +78,7 @@ class ProductController extends Controller
             ->with('success', 'Produto atualizado com sucesso');
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $product): RedirectResponse
     {
         $this->authorize('delete', $product);
         $product->delete();
