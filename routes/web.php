@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 
-Route::get('/', fn () => redirect()->route('product.index'))
+Route::get('/dashboard', fn () => redirect()->route('product.index'))
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
