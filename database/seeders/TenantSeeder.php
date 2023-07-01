@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
+use App\Models\Tenant;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CompanySeeder extends Seeder
+class TenantSeeder extends Seeder
 {
     use WithoutModelEvents;
 
     public function run(): void
     {
-        Company::factory(2)->create();
+        Tenant::factory(2)->create();
     }
 }

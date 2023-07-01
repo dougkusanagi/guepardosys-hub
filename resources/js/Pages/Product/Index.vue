@@ -216,14 +216,24 @@
                             </div>
 
                             <div class="flex items-center ml-4">
-                                <Link
+                                <button
+                                    @click="removeProduct(product.id)"
+                                    class="btn btn-error btn-sm btn-outline btn-square"
+                                >
+                                    <Close />
+                                </button>
+
+                                <!-- <Link
                                     :href="route('product.destroy', product.id)"
                                     class="btn btn-error btn-sm btn-outline btn-square"
                                     method="delete"
                                     as="button"
+                                    :onBefore="
+                                        () => window.confirm('Are you sure?')
+                                    "
                                 >
                                     <Close />
-                                </Link>
+                                </Link> -->
                             </div>
                         </div>
                     </div>
@@ -290,7 +300,7 @@ const queryParams = reactive({
     category: "",
     status: "",
     order_by: "name",
-    direction: "asc",
+    direction: "",
     per_page: props.per_page,
 });
 
@@ -307,6 +317,7 @@ watch(
 
 const sortBy = (field) => {
     if (queryParams.order_by === field) {
+        console.log(queryParams.direction);
         queryParams.direction =
             queryParams.direction === "asc" ? "desc" : "asc";
     } else {
@@ -325,4 +336,11 @@ const categories_all_complete = computed(() => {
 const getProductThumb = (product) => {
     return product.images.length ? product.images[0] : "/img/no-image.png";
 };
+
+function removeProduct(product_id) {
+    router.visit(route("product.destroy", product_id), {
+        method: "delete",
+        onBefore: () => confirm("Tem certeza que deseja deletar o produto?"),
+    });
+}
 </script>

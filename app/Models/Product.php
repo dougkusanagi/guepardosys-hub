@@ -7,8 +7,8 @@ use App\Filters\ByNameFilter;
 use App\Filters\ByStatusFilter;
 use App\Filters\OrderByFilter;
 use App\Traits\Relationships\BelongsToCategory;
-use App\Traits\Relationships\BelongsToCompany;
-use App\Traits\Scope\ScopeFilterTrait;
+use App\Scopes\FilterTraitScope;
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,11 +19,14 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, BelongsToCategory, BelongsToCompany, ScopeFilterTrait;
+    use HasFactory, InteractsWithMedia, BelongsToCategory, Tenantable, FilterTraitScope;
 
     public const perPage = "25";
-    protected $guarded = [];
+
+    protected $guarded = ['id'];
+
     protected $appends = ['images'];
+
     protected $scopeFilters = [
         ByNameFilter::class,
         ByCategoryFilter::class,
@@ -33,7 +36,7 @@ class Product extends Model implements HasMedia
 
     public function scopePaginated(Builder $query): LengthAwarePaginator
     {
-        return $query->whereBelongsTo(auth()->user()->company)
+        return $query
             ->with(['category'])
             ->filter()
             ->paginate(request('per_page', Product::perPage))
@@ -43,8 +46,7 @@ class Product extends Model implements HasMedia
     public function getImagesAttribute()
     {
         return !$this->getMedia('images')->isEmpty()
-            ? $this->getMedia('images')
-            ->map(function (Media $media) {
+            ? $this->getMedia('images')->map(function (Media $media) {
                 return $media->getUrl();
             })
             : null;

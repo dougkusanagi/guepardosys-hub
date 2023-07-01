@@ -113,7 +113,14 @@
 
                         <div class="flex">
                             <div class="flex items-center ml-4">
-                                <Link
+                                <button
+                                    @click="removeCategory(category.id)"
+                                    class="btn btn-error btn-sm btn-outline btn-square"
+                                >
+                                    <Close />
+                                </button>
+
+                                <!-- <Link
                                     :href="
                                         route('category.destroy', category.id)
                                     "
@@ -122,7 +129,7 @@
                                     as="button"
                                 >
                                     <Close />
-                                </Link>
+                                </Link> -->
                             </div>
                         </div>
                     </div>
@@ -182,4 +189,11 @@ watch(
     },
     { deep: true }
 );
+
+function removeCategory(category_id) {
+    router.visit(route("category.destroy", category_id), {
+        method: "delete",
+        onBefore: () => confirm("Tem certeza que deseja deletar a categoria?"),
+    });
+}
 </script>

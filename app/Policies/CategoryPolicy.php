@@ -22,21 +22,21 @@ class CategoryPolicy
 
     public function update(User $user, Category $category): bool
     {
-        return $user->company_id === $category->company_id;
+        return $user->tenant_id === $category->tenant_id;
     }
 
     public function delete(User $user, Category $category): bool
     {
-        return $user->company_id === $category->company_id;
+        return $user->tenant_id === $category->tenant_id;
     }
 
     public function restore(User $user, Category $category): bool
     {
-        return $user->company_id === $category->company_id;
+        return $user->tenant_id === $category->tenant_id;
     }
 
     public function forceDelete(User $user, Category $category): bool
     {
-        return $user->company_id === $category->company_id;
+        return $user->tenant_id === $category->tenant_id;
     }
 }

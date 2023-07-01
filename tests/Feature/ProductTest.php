@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Company;
+use App\Models\Tenant;
 use App\Models\Product;
 use App\Models\User;
 
@@ -19,10 +19,10 @@ it('renders product.create for authenticated user', function () {
         ->assertOk();
 });
 
-it('renders product.edit for users from same company', function () {
-    $company = Company::factory()->create();
-    $user = User::factory()->create(['company_id' => $company->id]);
-    $product = Product::factory()->create(['company_id' => $company->id]);
+it('renders product.edit for users from same tenant', function () {
+    $tenant = Tenant::factory()->create();
+    $user = User::factory()->create(['tenant_id' => $tenant->id]);
+    $product = Product::factory()->create(['tenant_id' => $tenant->id]);
 
     actingAs($user)
         ->get(route('product.edit', $product->id))
@@ -34,25 +34,25 @@ it('requires authentication to open product.index ', function () {
         ->assertRedirect(route('login'));
 });
 
-it('requires to be from same company to open product.edit', function () {
-    $company_1 = Company::factory()->create();
-    $product_company_1 = Product::factory()->create(['company_id' => $company_1->id]);
-    $company_2 = Company::factory()->create();
-    $user_from_company_2 = User::factory()->create(['company_id' => $company_2->id]);
+it('requires to be from same tenant to open product.edit', function () {
+    $tenant_1 = Tenant::factory()->create();
+    $product_tenant_1 = Product::factory()->create(['tenant_id' => $tenant_1->id]);
+    $tenant_2 = Tenant::factory()->create();
+    $user_from_tenant_2 = User::factory()->create(['tenant_id' => $tenant_2->id]);
 
-    $response = actingAs($user_from_company_2)
-        ->get(route('product.edit', $product_company_1->id));
+    $response = actingAs($user_from_tenant_2)
+        ->get(route('product.edit', $product_tenant_1->id));
 
     expect($response)->assertForbidden();
 });
 
-it('requires to be from same company to delete a product', function () {
-    $company_company_1 = Company::factory()->create();
-    $company_company_2 = Company::factory()->create();
-    $user_company_2 = User::factory()->create(['company_id' => $company_company_2->id]);
-    $product_company_1 = Product::factory()->create(['company_id' => $company_company_1->id]);
+it('requires to be from same tenant to delete a product', function () {
+    $tenant_1 = Tenant::factory()->create();
+    $tenant_2 = Tenant::factory()->create();
+    $user_tenant_2 = User::factory()->create(['tenant_id' => $tenant_2->id]);
+    $product_tenant_1 = Product::factory()->create(['tenant_id' => $tenant_1->id]);
 
-    $response = actingAs($user_company_2)->delete(route('product.destroy', $product_company_1->id));
+    $response = actingAs($user_tenant_2)->delete(route('product.destroy', $product_tenant_1->id));
 
     expect($response)->assertForbidden();
 });
@@ -66,9 +66,9 @@ it('creates a product', function () {
 });
 
 it('updates a product', function () {
-    $company = Company::factory()->create();
-    $user = User::factory()->create(['company_id' => $company->id]);
-    $product = Product::factory()->create(['company_id' => $company->id]);
+    $tenant = Tenant::factory()->create();
+    $user = User::factory()->create(['tenant_id' => $tenant->id]);
+    $product = Product::factory()->create(['tenant_id' => $tenant->id]);
 
     $productArray = $product->toArray();
     $productArray['name'] = 'Updated';
@@ -82,9 +82,9 @@ it('updates a product', function () {
 });
 
 it('deletes a product', function () {
-    $company = Company::factory()->create();
-    $user = User::factory()->create(['company_id' => $company->id]);
-    $product = Product::factory()->create(['company_id' => $company->id]);
+    $tenant = Tenant::factory()->create();
+    $user = User::factory()->create(['tenant_id' => $tenant->id]);
+    $product = Product::factory()->create(['tenant_id' => $tenant->id]);
 
     $response = actingAs($user)
         ->delete(

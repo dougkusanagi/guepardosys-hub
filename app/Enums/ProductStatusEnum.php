@@ -17,8 +17,9 @@ enum ProductStatusEnum: int
 
     public static function asSelectArray(): Collection
     {
-        // dd(self::cases());
         return collect(self::cases())
-            ->map(fn ($status) => ['id' => $status->value, 'name' => $status->name]);
+            ->map(fn ($status) => [
+                'id' => $status->value, 'name' => $status->name
+            ]);
     }
 }

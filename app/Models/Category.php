@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Filters\ByNameFilter;
 use App\Filters\OrderByFilter;
-use App\Traits\Relationships\BelongsToCompany;
-use App\Traits\Scope\ScopeFilterTrait;
+use App\Scopes\FilterTraitScope;
+use App\Traits\Tenantable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,10 +14,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Category extends Model
 {
-    use HasFactory, BelongsToCompany, ScopeFilterTrait;
+    use HasFactory, Tenantable, FilterTraitScope;
 
     public const perPage = "25";
-    protected $guarded = [];
+
+    protected $guarded = ['id'];
+
     protected $scopeFilters = [
         ByNameFilter::class,
         OrderByFilter::class,
@@ -30,7 +32,7 @@ class Category extends Model
 
     public function scopePaginated(Builder $query): LengthAwarePaginator
     {
-        return $query->whereBelongsTo(auth()->user()->company)
+        return $query
             ->filter()
             ->paginate(request('per_page', Product::perPage))
             ->withQueryString();

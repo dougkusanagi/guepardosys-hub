@@ -13,7 +13,7 @@ class CompleteSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            CompanySeeder::class,
+            TenantSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,

@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Company;
-use App\Models\Product;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -49,7 +48,7 @@ expect()->extend('toBeOne', function () {
 
 function asUser(array $attributes = []): TestCase
 {
-    $company = Company::factory()->create();
-    $user = User::factory()->create(['company_id' => $company->id, ...$attributes]);
+    $tenant = Tenant::factory()->create();
+    $user = User::factory()->create(['tenant_id' => $tenant->id, ...$attributes]);
     return actingAs($user);
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Traits\Scope;
+namespace App\Scopes;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Pipeline;
 
-trait ScopeFilterTrait
+trait FilterTraitScope
 {
     public function scopeFilter(Builder $builder)
     {

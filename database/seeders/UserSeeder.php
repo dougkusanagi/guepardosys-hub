@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,18 +14,21 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()
-            ->for(Company::first())
+            ->for(Tenant::first())
             ->create([
-                'name' => 'Example',
-                'email' => 'example@email.com',
+                'name' => 'Admin',
+                'email' => 'admin@dougdesign.com.br',
                 'password' => bcrypt('password'),
+                'tenant_id' => null,
             ]);
 
-        Company::all()
-            ->each(function (Company $company) {
-                User::factory(4)
-                    ->for($company)
-                    ->create();
+        Tenant::all()
+            ->each(function (Tenant $tenant) {
+                User::factory(2)
+                    ->for($tenant)
+                    ->create([
+                        'password' => bcrypt('password'),
+                    ]);
             });
     }
 }

@@ -17,21 +17,21 @@ class ProductPolicy
 
     public function update(User $user, Product $product): bool
     {
-        return $user->company_id === $product->company_id;
+        return $user->tenant_id === $product->tenant_id || is_null($user->tenant_id);
     }
 
     public function delete(User $user, Product $product): bool
     {
-        return $user->company_id === $product->company_id;
+        return $user->tenant_id === $product->tenant_id || is_null($user->tenant_id);
     }
 
     public function restore(User $user, Product $product): bool
     {
-        return $user->company_id === $product->company_id;
+        return $user->tenant_id === $product->tenant_id || is_null($user->tenant_id);
     }
 
     public function forceDelete(User $user, Product $product): bool
     {
-        return $user->company_id === $product->company_id;
+        return $user->tenant_id === $product->tenant_id || is_null($user->tenant_id);
     }
 }

@@ -26,7 +26,6 @@ class ProductController extends Controller
                 'product_count_array' => ProductService::getStatusCountArray(),
                 'categories_all' => Category::query()
                     ->select('id', 'name')
-                    ->whereBelongsTo(auth()->user()->company)
                     ->get(),
                 'per_page' => request('per_page', Product::perPage),
             ]
@@ -41,7 +40,6 @@ class ProductController extends Controller
                 'product_status_enum' => ProductStatusEnum::asSelectArray(),
                 'categories_all' => Category::query()
                     ->select('id', 'name')
-                    ->whereBelongsTo(auth()->user()->company)
                     ->get(),
             ]
         );
@@ -49,7 +47,7 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request): RedirectResponse
     {
-        $product = Product::create($request->validated() + ['company_id' => auth()->user()->company_id]);
+        $product = Product::create($request->validated());
         ProductImageService::registerCollections($request, $product);
 
         return to_route('product.edit', $product)
@@ -67,7 +65,6 @@ class ProductController extends Controller
                 'product_status_enum' => ProductStatusEnum::asSelectArray(),
                 'categories_all' => Category::query()
                     ->select('id', 'name')
-                    ->whereBelongsTo(auth()->user()->company)
                     ->get(),
                 'images' => $product->getMedia('images')
                     ->map(function (Media $media) {

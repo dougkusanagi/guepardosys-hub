@@ -10,10 +10,10 @@ class ProductService
 
     public function getStatusCountsArray()
     {
-        $totalActive    = auth()->user()->company->products()->whereStatus(ProductStatusEnum::Active)->count();
-        $totalInactive  = auth()->user()->company->products()->whereStatus(ProductStatusEnum::Inactive)->count();
-        $totalWaiting   = auth()->user()->company->products()->whereStatus(ProductStatusEnum::Waiting)->count();
-        $total          = auth()->user()->company->products()->count();
+        $totalActive    = Product::whereStatus(ProductStatusEnum::Active)->count();
+        $totalInactive  = Product::whereStatus(ProductStatusEnum::Inactive)->count();
+        $totalWaiting   = Product::whereStatus(ProductStatusEnum::Waiting)->count();
+        $total          = Product::count();
 
         return collect(compact('totalActive', 'totalInactive', 'totalWaiting', 'total'));
     }
